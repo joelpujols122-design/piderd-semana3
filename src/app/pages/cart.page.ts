@@ -18,17 +18,30 @@ export class CartPage {
   readonly maxQuantity = MAX_QUANTITY;
   readonly attempted = signal(false);
   readonly busy = signal(false);
-  changeMode(mode: DeliveryMode): void { this.order.setMode(mode); this.attempted.set(false); }
-  invalidAddress(): boolean { return addressRequired(this.order.deliveryMode(), this.order.address()); }
+  changeMode(mode: DeliveryMode): void {
+    this.order.setMode(mode);
+    this.attempted.set(false);
+  }
+
+  invalidAddress(): boolean {
+    return addressRequired(this.order.deliveryMode(), this.order.address());
+  }
+
   async remove(line: CartLine, sliding: IonItemSliding): Promise<void> {
     await sliding.close();
     this.order.remove(line.product.id);
-    const toast = await this.toasts.create({ message: `${line.product.name} eliminado del carrito.`, duration: 1800, icon: 'trash-outline' });
+    const toast = await this.toasts.create({
+      message: `${line.product.name} eliminado del carrito.`,
+      duration: 1800,
+      icon: 'trash-outline',
+    });
     await toast.present();
   }
   async confirm(): Promise<void> {
     this.attempted.set(true);
-    if (this.invalidAddress() || !this.order.count() || this.order.confirmed() || this.busy()) return;
+    if (this.invalidAddress() || !this.order.count() || this.order.confirmed() || this.busy()) {
+      return;
+    }
     this.busy.set(true);
     const destination = this.order.deliveryMode() === 'delivery' ? `Entrega en ${this.order.address().trim()}.` : 'Recoger en el local.';
     const alert = await this.alerts.create({
@@ -37,13 +50,26 @@ export class CartPage {
       backdropDismiss: false,
       buttons: [
         { text: 'Revisar', role: 'cancel' },
-        { text: 'Sí, confirmar', handler: () => { this.order.confirmed.set(true); void this.showConfirmation(); } },
+        {
+          text: 'Sí, confirmar',
+          handler: () => {
+            this.order.confirmed.set(true);
+            void this.showConfirmation();
+          },
+        },
       ],
     });
-    await alert.present(); await alert.onDidDismiss(); this.busy.set(false);
+    await alert.present();
+    await alert.onDidDismiss();
+    this.busy.set(false);
   }
   private async showConfirmation(): Promise<void> {
-    const toast = await this.toasts.create({ message: '¡Pedido de demostración confirmado!', duration: 2600, icon: 'checkmark-circle-outline', color: 'success' });
+    const toast = await this.toasts.create({
+      message: '¡Pedido de demostración confirmado!',
+      duration: 2600,
+      icon: 'checkmark-circle-outline',
+      color: 'success',
+    });
     await toast.present();
   }
 }

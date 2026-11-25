@@ -32,8 +32,8 @@ export class LongPressDirective implements AfterViewInit, OnDestroy {
     }, true);
     this.gesture.enable(true);
   }
-  // Keep the original contact coordinates: Ionic can batch movement callbacks
-  // and reset its gesture delta when capturing. Raw contacts close that gap.
+  // Conserva el punto inicial para cancelar la pulsación si el dedo se desplaza.
+  // Ionic puede agrupar movimientos y reiniciar la distancia al capturar el gesto.
   @HostListener('pointerdown', ['$event']) onPointerDown(event: PointerEvent): void {
     if (!event.isPrimary) { this.abort(); return; }
     if (event.pointerType === 'mouse' && event.button !== 0) return;
@@ -54,7 +54,7 @@ export class LongPressDirective implements AfterViewInit, OnDestroy {
   @HostListener('document:visibilitychange') onVisibilityChange(): void { if (document.hidden) this.finish(); }
   @HostListener('contextmenu', ['$event']) onContextMenu(event: Event): void { event.preventDefault(); }
   private startContact(point: { clientX: number; clientY: number }): void {
-    // A touch also emits pointerdown; do not restart the same press twice.
+    // Un toque también puede emitir pointerdown; la misma pulsación se inicia una sola vez.
     if (this.active) return;
     this.clearTimer();
     this.origin = { clientX: point.clientX, clientY: point.clientY };

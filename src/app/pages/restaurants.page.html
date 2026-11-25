@@ -1,38 +1,141 @@
-<ion-header class="ion-no-border"><ion-toolbar>
-  <ion-buttons slot="start"><ion-menu-button data-testid="menu-button" aria-label="Abrir menú" /></ion-buttons>
-  <ion-title><span class="brand">Pide<span class="brand-rd">RD</span></span></ion-title>
-  <ion-buttons slot="end"><ion-button routerLink="/carrito" aria-label="Ver carrito" data-testid="header-cart"><ion-icon slot="icon-only" name="bag-handle-outline" />@if (order.count()) { <span class="header-count">{{ order.count() }}</span> }</ion-button></ion-buttons>
-</ion-toolbar></ion-header>
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button data-testid="menu-button" aria-label="Abrir menú" />
+    </ion-buttons>
+    <ion-title><span class="brand">Pide<span class="brand-rd">RD</span></span></ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/carrito" aria-label="Ver carrito" data-testid="header-cart">
+        <ion-icon slot="icon-only" name="bag-handle-outline" />
+        @if (order.count()) {
+          <span class="header-count">{{ order.count() }}</span>
+        }
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [scrollY]="true" data-testid="restaurants-content">
-  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)" [pullMin]="70" [pullMax]="150" data-testid="restaurant-refresher">
-    <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Suelta para revisar la lista" refreshingSpinner="crescent" refreshingText="Revisando restaurantes…" />
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="refresh($event)"
+    [pullMin]="70"
+    [pullMax]="150"
+    data-testid="restaurant-refresher"
+  >
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Suelta para revisar la lista"
+      refreshingSpinner="crescent"
+      refreshingText="Revisando restaurantes…"
+    />
   </ion-refresher>
+
   <main class="page-shell restaurants-page">
-    <div class="page-heading"><span class="eyebrow">SABORES CERCA DE TI</span><h1>¿Qué se te antoja?</h1><p>Encuentra tu restaurante y disfruta algo rico.</p></div>
-    <ion-card class="welcome-card"><ion-card-content>
-      <div><span class="mini-tag">SABOR DOMINICANO</span><h2>Como en casa.<br>Donde tú estés.</h2><p>Recógelo en el local o elige delivery.</p></div>
-        <img src="assets/images/pollo-real.jpg" alt="Plato de pollo con arroz, habichuelas y tostones" class="welcome-art">
-    </ion-card-content></ion-card>
-    <div class="find-controls">
-      <ion-searchbar [value]="query()" (ionInput)="query.set($any($event.target).value || '')" placeholder="Buscar restaurante" aria-label="Buscar restaurante" [debounce]="120" data-testid="restaurant-search" />
-      <div class="location-picker"><ion-icon name="location-outline" aria-hidden="true" /><ion-select label="Provincia" labelPlacement="stacked" interface="popover" [value]="province()" (ionChange)="province.set($event.detail.value)" aria-label="Provincia"><ion-select-option value="Santo Domingo">Santo Domingo</ion-select-option><ion-select-option value="Santiago">Santiago</ion-select-option></ion-select></div>
+    <div class="page-heading">
+      <span class="eyebrow">SABORES CERCA DE TI</span>
+      <h1>¿Qué se te antoja?</h1>
+      <p>Encuentra tu restaurante y disfruta algo rico.</p>
     </div>
-    <div class="section-heading"><h2>Restaurantes</h2><span>{{ filtered().length }} disponibles</span></div>
+    <ion-card class="welcome-card">
+      <ion-card-content>
+        <div>
+          <span class="mini-tag">SABOR DOMINICANO</span>
+          <h2>Como en casa.<br>Donde tú estés.</h2>
+          <p>Recógelo en el local o elige delivery.</p>
+        </div>
+        <img
+          src="assets/images/pollo-real.jpg"
+          alt="Plato de pollo con arroz, habichuelas y tostones"
+          class="welcome-art"
+        >
+      </ion-card-content>
+    </ion-card>
+
+    <div class="find-controls">
+      <ion-searchbar
+        [value]="query()"
+        (ionInput)="query.set($any($event.target).value || '')"
+        placeholder="Buscar restaurante"
+        aria-label="Buscar restaurante"
+        [debounce]="120"
+        data-testid="restaurant-search"
+      />
+      <div class="location-picker">
+        <ion-icon name="location-outline" aria-hidden="true" />
+        <ion-select
+          label="Provincia"
+          labelPlacement="stacked"
+          interface="popover"
+          [value]="province()"
+          (ionChange)="province.set($event.detail.value)"
+          aria-label="Provincia"
+        >
+          <ion-select-option value="Santo Domingo">Santo Domingo</ion-select-option>
+          <ion-select-option value="Santiago">Santiago</ion-select-option>
+        </ion-select>
+      </div>
+    </div>
+
+    <div class="section-heading">
+      <h2>Restaurantes</h2>
+      <span>{{ filtered().length }} disponibles</span>
+    </div>
     <ion-list class="restaurant-list" lines="none" aria-label="Restaurantes disponibles">
       @for (restaurant of filtered(); track restaurant.id) {
         <ion-card class="restaurant-card">
-          <img [src]="restaurant.image" [alt]="'Especialidad de ' + restaurant.name" class="restaurant-image">
+          <img
+            [src]="restaurant.image"
+            [alt]="'Especialidad de ' + restaurant.name"
+            class="restaurant-image"
+          >
           <ion-card-content>
-            <span class="cuisine-tag">{{ restaurant.tag }}</span><h3>{{ restaurant.name }}</h3><p>{{ restaurant.description }}</p>
-            <div class="restaurant-bottom"><span class="time-label"><ion-icon name="time-outline" aria-hidden="true" />{{ restaurant.time }}</span><ion-button fill="clear" (click)="choose(restaurant)" [attr.data-testid]="'restaurant-' + restaurant.id" [attr.aria-label]="'Elegir ' + restaurant.name">Elegir<ion-icon name="arrow-forward-outline" slot="end" /></ion-button></div>
+            <span class="cuisine-tag">{{ restaurant.tag }}</span>
+            <h3>{{ restaurant.name }}</h3>
+            <p>{{ restaurant.description }}</p>
+            <div class="restaurant-bottom">
+              <span class="time-label">
+                <ion-icon name="time-outline" aria-hidden="true" />{{ restaurant.time }}
+              </span>
+              <ion-button
+                fill="clear"
+                (click)="choose(restaurant)"
+                [attr.data-testid]="'restaurant-' + restaurant.id"
+                [attr.aria-label]="'Elegir ' + restaurant.name"
+              >
+                Elegir<ion-icon name="arrow-forward-outline" slot="end" />
+              </ion-button>
+            </div>
           </ion-card-content>
         </ion-card>
       } @empty {
-        <ion-card class="empty-card"><ion-card-content><ion-icon name="restaurant-outline" aria-hidden="true" /><h3>No encontramos restaurantes</h3><p>{{ province() === 'Santiago' ? 'Por ahora nuestro catálogo está disponible en Santo Domingo.' : 'Prueba otro nombre o borra la búsqueda.' }}</p><ion-button fill="outline" (click)="query.set(''); province.set('Santo Domingo')">Ver restaurantes</ion-button></ion-card-content></ion-card>
+        <ion-card class="empty-card">
+          <ion-card-content>
+            <ion-icon name="restaurant-outline" aria-hidden="true" />
+            <h3>No encontramos restaurantes</h3>
+            <p>{{ province() === 'Santiago' ? 'Por ahora nuestro catálogo está disponible en Santo Domingo.' : 'Prueba otro nombre o borra la búsqueda.' }}</p>
+            <ion-button fill="outline" (click)="query.set(''); province.set('Santo Domingo')">
+              Ver restaurantes
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
       }
     </ion-list>
+
     <p class="catalog-note">Restaurantes, precios y tiempos de ejemplo.</p>
-    @if (order.lastReviewed()) { <p class="refresh-status" role="status" data-testid="refresh-status">Lista revisada a las {{ order.lastReviewed() }}</p> }
+    @if (order.lastReviewed()) {
+      <p class="refresh-status" role="status" data-testid="refresh-status">
+        Lista revisada a las {{ order.lastReviewed() }}
+      </p>
+    }
   </main>
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end"><ion-fab-button routerLink="/carrito" aria-label="Ver mi carrito" data-testid="cart-fab"><ion-icon name="bag-handle-outline" />@if (order.count()) { <span class="fab-count">{{ order.count() }}</span> }</ion-fab-button></ion-fab>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button routerLink="/carrito" aria-label="Ver mi carrito" data-testid="cart-fab">
+      <ion-icon name="bag-handle-outline" />
+      @if (order.count()) {
+        <span class="fab-count">{{ order.count() }}</span>
+      }
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

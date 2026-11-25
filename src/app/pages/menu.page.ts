@@ -22,32 +22,61 @@ export class MenuPage {
   readonly zoomPercent = signal<Record<string, number>>({});
   private sheetOpen = false;
 
-  setZoom(id: string, value: number): void { this.zoomPercent.update(values => ({ ...values, [id]: value })); }
+  setZoom(id: string, value: number): void {
+    this.zoomPercent.update(values => ({ ...values, [id]: value }));
+  }
+
   async add(product: Product): Promise<void> {
     const quantity = this.order.lines().find(line => line.product.id === product.id)?.quantity ?? 0;
     if (quantity >= MAX_QUANTITY) {
-      const toast = await this.toasts.create({ message: 'Puedes agregar hasta 20 unidades de cada producto.', duration: 2000 }); await toast.present(); return;
+      const toast = await this.toasts.create({
+        message: 'Puedes agregar hasta 20 unidades de cada producto.',
+        duration: 2000,
+      });
+      await toast.present();
+      return;
     }
     this.order.add(product);
-    const toast = await this.toasts.create({ message: `${product.name} agregado al carrito.`, duration: 1400, position: 'bottom', icon: 'checkmark-circle-outline' });
+    const toast = await this.toasts.create({
+      message: `${product.name} agregado al carrito.`,
+      duration: 1400,
+      position: 'bottom',
+      icon: 'checkmark-circle-outline',
+    });
     await toast.present();
   }
   async contextMenu(product: Product): Promise<void> {
-    if (this.sheetOpen) return;
+    if (this.sheetOpen) {
+      return;
+    }
     this.sheetOpen = true;
     const sheet = await this.sheets.create({
       header: product.name,
       subHeader: money(product.price),
       buttons: [
-        { text: 'Agregar al carrito', icon: 'bag-handle-outline', handler: () => { void this.add(product); } },
-        { text: 'Ver descripción', icon: 'restaurant-outline', handler: () => { void this.describe(product); } },
+        {
+          text: 'Agregar al carrito',
+          icon: 'bag-handle-outline',
+          handler: () => { void this.add(product); },
+        },
+        {
+          text: 'Ver descripción',
+          icon: 'restaurant-outline',
+          handler: () => { void this.describe(product); },
+        },
         { text: 'Cancelar', role: 'cancel', icon: 'close-outline' },
       ],
     });
-    await sheet.present(); await sheet.onDidDismiss(); this.sheetOpen = false;
+    await sheet.present();
+    await sheet.onDidDismiss();
+    this.sheetOpen = false;
   }
   private async describe(product: Product): Promise<void> {
-    const alert = await this.alerts.create({ header: product.name, message: `${product.description} ${money(product.price)}.`, buttons: ['Entendido'] });
+    const alert = await this.alerts.create({
+      header: product.name,
+      message: `${product.description} ${money(product.price)}.`,
+      buttons: ['Entendido'],
+    });
     await alert.present();
   }
 }

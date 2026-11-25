@@ -1,6 +1,6 @@
 # PideRD — Semana 3
 
-Aplicación Ionic Angular standalone con tres interfaces: Restaurantes, Menú de comidas y Carrito y pedido. Datos de ejemplo; no realiza pedidos, pagos ni delivery reales.
+PideRD es una app de ejemplo hecha con Ionic y Angular. Tiene tres pantallas: Restaurantes, Menú de comidas y Carrito y pedido. Los productos y precios son de demostración.
 
 Proyecto académico grupal de Programación de Dispositivos Móviles, UAPA.
 
@@ -34,16 +34,16 @@ npm run android:sync
 npm run android:open
 ```
 
-Seleccionar un emulador o dispositivo en Android Studio y ejecutar **Run**. El proyecto Android se incluye; una vista móvil en el navegador no sustituye esta comprobación.
+Seleccionar un teléfono o emulador en Android Studio y ejecutar **Run**. Ahí se comprueba el funcionamiento de los gestos táctiles.
 
 La versión Android actual es 1.0.1. Las capturas y el video de demostración académica se entregan por separado.
 
 ## Gestos
 
-- Carrito: deslizar un producto hacia la izquierda revela Eliminar; completar el deslizamiento lo elimina. `ionSwipe` se escucha en `ion-item-options`, como establece la API actual.
-- Restaurantes: arrastrar desde arriba relee el catálogo local empaquetado y finaliza `ion-refresher.complete()`; no simula una consulta a restaurantes reales.
-- Menú: separar dos dedos sobre la imagen amplía entre 1× y 3×. El porcentaje y Restablecer permiten reconocer el resultado.
-- Menú: mantener 650 ms sobre el nombre/descripción de un producto abre un Action Sheet. Arrastrar más de 10 px, terminar o cancelar el toque cancela la presión pendiente. El botón de tres puntos ofrece la misma acción con teclado.
+- Carrito: deslizar un producto a la izquierda muestra Eliminar. Un deslizamiento completo también lo quita del pedido.
+- Restaurantes: tirar de la lista hacia abajo vuelve a cargar el catálogo guardado en la app.
+- Menú: separar dos dedos sobre la foto la amplía, hasta tres veces su tamaño. Restablecer devuelve la imagen al tamaño inicial.
+- Menú: mantener pulsado el nombre o la descripción de un plato durante 650 ms abre sus opciones. Si se mueve el dedo más de 10 px, se cancela la pulsación. El botón de tres puntos abre las mismas opciones.
 
 ## Fotografías e ícono
 
@@ -60,5 +60,3 @@ El ícono editable está en [branding/piderd-icon.svg](branding/piderd-icon.svg)
 - https://ionicframework.com/docs/utilities/gestures
 - https://developer.mozilla.org/en-US/docs/Web/API/Touch_events/Multi-touch_interaction
 - https://angular.dev/reference/versions
-
-La guía docente orienta los componentes. Se corrigen dos simplificaciones de sus ejemplos: `ionSwipe` pertenece a las opciones de la fila y `GestureDetail` no incluye un factor de pinch; la ampliación se calcula con dos contactos táctiles reales.

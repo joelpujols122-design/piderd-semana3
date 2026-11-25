@@ -1,6 +1,6 @@
 # Fotografías de PideRD
 
-Fotografías ilustrativas incorporadas localmente el 24 de noviembre de 2026. No se generaron con IA. Los archivos conservan la fotografía descargada; la interfaz adapta el encuadre mediante CSS. Las fotografías no representan negocios reales asociados a PideRD.
+Fotografías utilizadas para ilustrar los platos de la demo. Las fuentes y licencias se indican a continuación. La app ajusta el encuadre de cada foto al espacio de la tarjeta. Los restaurantes de PideRD son ejemplos del proyecto académico.
 
 | Archivo | Fotografía original | Autor | Licencia |
 | --- | --- | --- | --- |

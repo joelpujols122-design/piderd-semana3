@@ -1,42 +1,185 @@
-<ion-header class="ion-no-border"><ion-toolbar><ion-buttons slot="start"><ion-menu-button data-testid="menu-button" aria-label="Abrir menú" /></ion-buttons><ion-title>Carrito y pedido</ion-title></ion-toolbar></ion-header>
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button data-testid="menu-button" aria-label="Abrir menú" />
+    </ion-buttons>
+    <ion-title>Carrito y pedido</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
   <main class="page-shell cart-page">
-    <a routerLink="/menu" class="back-link"><ion-icon name="arrow-forward-outline" aria-hidden="true" />Menú de comidas</a>
-    <div class="page-heading"><span class="eyebrow">YA CASI ESTÁ</span><h1>Tu pedido.</h1><p>{{ order.selectedRestaurant().name }}</p></div>
+    <a routerLink="/menu" class="back-link">
+      <ion-icon name="arrow-forward-outline" aria-hidden="true" />Menú de comidas
+    </a>
+    <div class="page-heading">
+      <span class="eyebrow">YA CASI ESTÁ</span>
+      <h1>Tu pedido.</h1>
+      <p>{{ order.selectedRestaurant().name }}</p>
+    </div>
+
     @if (!order.count()) {
-      <ion-card class="empty-card"><ion-card-content><ion-icon name="bag-handle-outline" aria-hidden="true" /><h2>Tu carrito está esperando</h2><p>Elige algo del menú y vuelve para revisar tu pedido.</p><ion-button routerLink="/menu">Explorar el menú<ion-icon name="arrow-forward-outline" slot="end" /></ion-button></ion-card-content></ion-card>
+      <ion-card class="empty-card">
+        <ion-card-content>
+          <ion-icon name="bag-handle-outline" aria-hidden="true" />
+          <h2>Tu carrito está esperando</h2>
+          <p>Elige algo del menú y vuelve para revisar tu pedido.</p>
+          <ion-button routerLink="/menu">
+            Explorar el menú<ion-icon name="arrow-forward-outline" slot="end" />
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
     }
     @if (order.confirmed()) {
-      <div class="confirmation-banner" role="status" data-testid="order-confirmation"><ion-icon name="checkmark-circle-outline" aria-hidden="true" /><div><strong>¡Pedido confirmado!</strong><span>Demostración completada. No se realizó ningún cobro.</span></div><ion-button fill="clear" (click)="order.clear()">Nuevo pedido</ion-button></div>
+      <div class="confirmation-banner" role="status" data-testid="order-confirmation">
+        <ion-icon name="checkmark-circle-outline" aria-hidden="true" />
+        <div>
+          <strong>¡Pedido confirmado!</strong>
+          <span>Demostración completada. No se realizó ningún cobro.</span>
+        </div>
+        <ion-button fill="clear" (click)="order.clear()">Nuevo pedido</ion-button>
+      </div>
     }
+
     <div class="cart-grid" [class.empty-cart-grid]="!order.count()">
       <section>
-        <div class="section-heading"><h2>Productos</h2><span>{{ order.count() }} en total</span></div>
+        <div class="section-heading">
+          <h2>Productos</h2>
+          <span>{{ order.count() }} en total</span>
+        </div>
         <ion-list class="cart-list" lines="full" aria-label="Productos en el carrito" data-testid="cart-list">
           @for (line of order.lines(); track line.product.id) {
             <ion-item-sliding #sliding [attr.data-testid]="'cart-item-' + line.product.id">
               <ion-item>
-                <div class="cart-line"><img [src]="line.product.image" [alt]="line.product.name"><div class="cart-line-info"><h3>{{ line.product.name }}</h3><p>{{ money(line.product.price) }} c/u</p><strong>{{ money(line.product.price * line.quantity) }}</strong></div><div class="quantity-control"><button (click)="order.setQuantity(line.product.id, line.quantity - 1)" [attr.aria-label]="'Quitar una unidad de ' + line.product.name" [attr.data-testid]="'decrease-' + line.product.id"><ion-icon name="remove-outline" /></button><span [attr.aria-label]="'Cantidad: ' + line.quantity">{{ line.quantity }}</span><button (click)="order.setQuantity(line.product.id, line.quantity + 1)" [disabled]="line.quantity >= maxQuantity" [attr.aria-label]="'Agregar una unidad de ' + line.product.name" [attr.data-testid]="'increase-' + line.product.id"><ion-icon name="add-outline" /></button></div></div>
+                <div class="cart-line">
+                  <img [src]="line.product.image" [alt]="line.product.name">
+                  <div class="cart-line-info">
+                    <h3>{{ line.product.name }}</h3>
+                    <p>{{ money(line.product.price) }} c/u</p>
+                    <strong>{{ money(line.product.price * line.quantity) }}</strong>
+                  </div>
+                  <div class="quantity-control">
+                    <button
+                      (click)="order.setQuantity(line.product.id, line.quantity - 1)"
+                      [attr.aria-label]="'Quitar una unidad de ' + line.product.name"
+                      [attr.data-testid]="'decrease-' + line.product.id"
+                    >
+                      <ion-icon name="remove-outline" />
+                    </button>
+                    <span [attr.aria-label]="'Cantidad: ' + line.quantity">{{ line.quantity }}</span>
+                    <button
+                      (click)="order.setQuantity(line.product.id, line.quantity + 1)"
+                      [disabled]="line.quantity >= maxQuantity"
+                      [attr.aria-label]="'Agregar una unidad de ' + line.product.name"
+                      [attr.data-testid]="'increase-' + line.product.id"
+                    >
+                      <ion-icon name="add-outline" />
+                    </button>
+                  </div>
+                </div>
               </ion-item>
-              <ion-item-options side="end" (ionSwipe)="remove(line, sliding)"><ion-item-option color="danger" [expandable]="true" (click)="remove(line, sliding)" [attr.aria-label]="'Eliminar ' + line.product.name" [attr.data-testid]="'delete-' + line.product.id"><ion-icon name="trash-outline" slot="top" />Eliminar</ion-item-option></ion-item-options>
+              <ion-item-options side="end" (ionSwipe)="remove(line, sliding)">
+                <ion-item-option
+                  color="danger"
+                  [expandable]="true"
+                  (click)="remove(line, sliding)"
+                  [attr.aria-label]="'Eliminar ' + line.product.name"
+                  [attr.data-testid]="'delete-' + line.product.id"
+                >
+                  <ion-icon name="trash-outline" slot="top" />Eliminar
+                </ion-item-option>
+              </ion-item-options>
             </ion-item-sliding>
           }
         </ion-list>
-        @if (order.count()) { <p class="gesture-hint">Desliza un producto hacia la izquierda para quitarlo.</p> }
-        <ion-card class="delivery-card"><ion-card-content>
-          <h2>¿Cómo lo prefieres?</h2><ion-radio-group [value]="order.deliveryMode()" (ionChange)="changeMode($event.detail.value)" aria-label="Tipo de entrega">
-            <ion-radio value="pickup" justify="space-between" labelPlacement="start" data-testid="pickup-option"><span class="delivery-label"><ion-icon name="storefront-outline" aria-hidden="true" /><span><strong>Recoger en el local</strong><small>Sin costo de entrega</small></span></span></ion-radio>
-            <ion-radio value="delivery" justify="space-between" labelPlacement="start" data-testid="delivery-toggle"><span class="delivery-label"><ion-icon name="bicycle-outline" aria-hidden="true" /><span><strong>Delivery</strong><small>Entrega por RD$80</small></span></span></ion-radio>
-          </ion-radio-group>
-          @if (order.deliveryMode() === 'delivery') {
-            <ion-input label="Dirección de entrega" labelPlacement="stacked" fill="outline" placeholder="Calle, número y sector" autocomplete="street-address" [value]="order.address()" (ionInput)="order.setAddress($any($event.target).value || '')" [class.ion-invalid]="attempted() && invalidAddress()" [class.ion-touched]="attempted()" [attr.aria-invalid]="attempted() && invalidAddress()" data-testid="address-input" />
-            @if (attempted() && invalidAddress()) { <p class="field-error" role="alert" data-testid="address-error">Escribe una dirección de al menos 8 caracteres: calle, número y sector.</p> }
-          }
-        </ion-card-content></ion-card>
+        @if (order.count()) {
+          <p class="gesture-hint">Desliza un producto hacia la izquierda para quitarlo.</p>
+        }
+
+        <ion-card class="delivery-card">
+          <ion-card-content>
+            <h2>¿Cómo lo prefieres?</h2>
+            <ion-radio-group
+              [value]="order.deliveryMode()"
+              (ionChange)="changeMode($event.detail.value)"
+              aria-label="Tipo de entrega"
+            >
+              <ion-radio value="pickup" justify="space-between" labelPlacement="start" data-testid="pickup-option">
+                <span class="delivery-label">
+                  <ion-icon name="storefront-outline" aria-hidden="true" />
+                  <span>
+                    <strong>Recoger en el local</strong>
+                    <small>Sin costo de entrega</small>
+                  </span>
+                </span>
+              </ion-radio>
+              <ion-radio value="delivery" justify="space-between" labelPlacement="start" data-testid="delivery-toggle">
+                <span class="delivery-label">
+                  <ion-icon name="bicycle-outline" aria-hidden="true" />
+                  <span>
+                    <strong>Delivery</strong>
+                    <small>Entrega por RD$80</small>
+                  </span>
+                </span>
+              </ion-radio>
+            </ion-radio-group>
+            @if (order.deliveryMode() === 'delivery') {
+              <ion-input
+                label="Dirección de entrega"
+                labelPlacement="stacked"
+                fill="outline"
+                placeholder="Calle, número y sector"
+                autocomplete="street-address"
+                [value]="order.address()"
+                (ionInput)="order.setAddress($any($event.target).value || '')"
+                [class.ion-invalid]="attempted() && invalidAddress()"
+                [class.ion-touched]="attempted()"
+                [attr.aria-invalid]="attempted() && invalidAddress()"
+                data-testid="address-input"
+              />
+              @if (attempted() && invalidAddress()) {
+                <p class="field-error" role="alert" data-testid="address-error">
+                  Escribe una dirección de al menos 8 caracteres: calle, número y sector.
+                </p>
+              }
+            }
+          </ion-card-content>
+        </ion-card>
       </section>
+
       <aside>
-        <ion-card class="summary-card"><ion-card-content><span class="eyebrow">TODO CLARO, SIN SORPRESAS</span><h2>Resumen del pedido</h2><dl><div><dt>Subtotal</dt><dd data-testid="subtotal">{{ money(order.totals().subtotal) }}</dd></div><div><dt>{{ order.deliveryMode() === 'delivery' ? 'Delivery' : 'Recoger en el local' }}</dt><dd data-testid="delivery-fee">{{ money(order.totals().delivery) }}</dd></div><div class="total-row"><dt>Total</dt><dd data-testid="cart-total">{{ money(order.totals().total) }}</dd></div></dl><ion-button expand="block" (click)="confirm()" [disabled]="!order.count() || busy() || order.confirmed()" data-testid="confirm-order"><ion-icon name="checkmark-outline" slot="start" />{{ order.confirmed() ? 'Pedido confirmado' : 'Confirmar pedido' }}</ion-button><p class="order-note">Pedido de demostración. No genera cobros ni envíos.</p></ion-card-content></ion-card>
-        <ion-button routerLink="/menu" fill="clear" expand="block" data-testid="continue-shopping">Seguir eligiendo<ion-icon name="arrow-forward-outline" slot="end" /></ion-button>
+        <ion-card class="summary-card">
+          <ion-card-content>
+            <span class="eyebrow">TODO CLARO, SIN SORPRESAS</span>
+            <h2>Resumen del pedido</h2>
+            <dl>
+              <div>
+                <dt>Subtotal</dt>
+                <dd data-testid="subtotal">{{ money(order.totals().subtotal) }}</dd>
+              </div>
+              <div>
+                <dt>{{ order.deliveryMode() === 'delivery' ? 'Delivery' : 'Recoger en el local' }}</dt>
+                <dd data-testid="delivery-fee">{{ money(order.totals().delivery) }}</dd>
+              </div>
+              <div class="total-row">
+                <dt>Total</dt>
+                <dd data-testid="cart-total">{{ money(order.totals().total) }}</dd>
+              </div>
+            </dl>
+            <ion-button
+              expand="block"
+              (click)="confirm()"
+              [disabled]="!order.count() || busy() || order.confirmed()"
+              data-testid="confirm-order"
+            >
+              <ion-icon name="checkmark-outline" slot="start" />{{ order.confirmed() ? 'Pedido confirmado' : 'Confirmar pedido' }}
+            </ion-button>
+            <p class="order-note">Pedido de demostración. No genera cobros ni envíos.</p>
+          </ion-card-content>
+        </ion-card>
+        <ion-button routerLink="/menu" fill="clear" expand="block" data-testid="continue-shopping">
+          Seguir eligiendo<ion-icon name="arrow-forward-outline" slot="end" />
+        </ion-button>
       </aside>
     </div>
   </main>
