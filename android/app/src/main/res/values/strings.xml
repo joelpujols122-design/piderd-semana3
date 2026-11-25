@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PideRD</string>
+    <string name="title_activity_main">PideRD</string>
+    <string name="package_name">com.piderd.app</string>
+    <string name="custom_url_scheme">com.piderd.app</string>
+</resources>

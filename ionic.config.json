@@ -1,0 +1,5 @@
+{
+  "name": "PideRD",
+  "type": "angular-standalone",
+  "integrations": { "capacitor": {} }
+}

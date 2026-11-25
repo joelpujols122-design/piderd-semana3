@@ -1,0 +1,35 @@
+<ion-app>
+  <ion-split-pane contentId="main-content" when="(min-width: 992px)">
+    <ion-menu contentId="main-content" menuId="principal" type="overlay" aria-label="Menú principal" data-testid="side-menu">
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <div class="brand side-brand"><span class="brand-symbol"><ion-icon name="bag-handle-outline" aria-hidden="true" /></span><span>Pide<span class="brand-rd">RD</span></span></div>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="menu-intro"><span class="eyebrow">HECHO PARA TU ANTOJO</span><h2>Lo bueno<br>está cerca.</h2><p>Sabores de aquí, a tu manera.</p></div>
+        <ion-list lines="none" class="nav-list">
+          @for (link of links; track link.path) {
+            <ion-menu-toggle [autoHide]="false">
+              <ion-item [routerLink]="link.path" routerLinkActive="selected" [detail]="false" [attr.data-testid]="link.id" button>
+                <ion-icon [name]="link.icon" slot="start" aria-hidden="true" />
+                <ion-label><h3>{{ link.title }}</h3><p>{{ link.caption }}</p></ion-label>
+                @if (link.id === 'nav-carrito' && order.count() > 0) { <span class="menu-count">{{ order.count() }}</span> }
+              </ion-item>
+            </ion-menu-toggle>
+          }
+        </ion-list>
+        <div class="menu-footer"><ion-icon name="location-outline" aria-hidden="true" /><span>República Dominicana</span></div>
+        <details class="photo-credits">
+          <summary>Créditos de las fotografías</summary>
+          <p>Fotos ilustrativas. Encuadre adaptado a las tarjetas.</p>
+          <p><a href="https://commons.wikimedia.org/wiki/File:Mega_Adventures_Dominican_Food.jpg" target="_blank" rel="noopener noreferrer">Plato criollo: Funcheta</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></p>
+          <p><a href="https://commons.wikimedia.org/wiki/File:Locrio_de_Pollo_(Dominicano).jpg" target="_blank" rel="noopener noreferrer">Locrio: Ll1324</a> · <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0</a></p>
+          <p><a href="https://commons.wikimedia.org/wiki/File:BanderaDominicana01.jpg" target="_blank" rel="noopener noreferrer">Plato de carne: Asalas03</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></p>
+          <p><a href="https://www.pexels.com/photo/close-up-photograph-of-a-drink-with-a-slice-of-passion-fruit-7014085/" target="_blank" rel="noopener noreferrer">Bebida de chinola: omer havivi</a> · <a href="https://www.pexels.com/license/" target="_blank" rel="noopener noreferrer">Pexels</a></p>
+        </details>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content" />
+  </ion-split-pane>
+</ion-app>

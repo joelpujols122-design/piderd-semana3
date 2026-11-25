@@ -1,0 +1,31 @@
+<ion-header class="ion-no-border"><ion-toolbar>
+  <ion-buttons slot="start"><ion-menu-button data-testid="menu-button" aria-label="Abrir menú" /></ion-buttons><ion-title>Menú de comidas</ion-title>
+  <ion-buttons slot="end"><ion-button routerLink="/carrito" aria-label="Ver carrito" data-testid="header-cart"><ion-icon slot="icon-only" name="bag-handle-outline" />@if (order.count()) { <span class="header-count">{{ order.count() }}</span> }</ion-button></ion-buttons>
+</ion-toolbar></ion-header>
+<ion-content>
+  <main class="page-shell menu-page">
+    <a routerLink="/restaurantes" class="back-link"><ion-icon name="arrow-forward-outline" aria-hidden="true" />Restaurantes</a>
+    <div class="page-heading menu-heading"><span class="eyebrow">{{ order.selectedRestaurant().name }}</span><h1>Hoy se come bien.</h1><p>Elige tu favorito. Nosotros ponemos el sazón.</p></div>
+    <ion-list class="product-list" lines="none" aria-label="Menú de comidas">
+      @for (product of products; track product.id) {
+        <ion-card class="product-card">
+          <div class="product-visual" appPinchZoom #zoom="pinchZoom" (zoomChanged)="setZoom(product.id, $event)" [attr.data-testid]="product.id === 'pollo' ? 'zoom-surface' : 'zoom-surface-jugo'" aria-label="Imagen ampliable con dos dedos">
+            <img [src]="product.image" [alt]="product.name" draggable="false" [attr.data-testid]="product.id === 'pollo' ? 'zoom-image' : 'zoom-image-jugo'">
+            <span class="zoom-indicator" aria-live="polite" [attr.data-testid]="'zoom-status-' + product.id"><ion-icon name="expand-outline" aria-hidden="true" />{{ zoomPercent()[product.id] || 100 }}%</span>
+          </div>
+          <ion-card-content>
+            <div appLongPress (longPressed)="contextMenu(product)" class="product-details" [attr.data-testid]="product.id === 'pollo' ? 'long-press-product' : 'long-press-jugo'">
+              <div class="product-category"><span class="cuisine-tag">{{ product.category }}</span><ion-button fill="clear" class="options-button" (click)="contextMenu(product)" [attr.aria-label]="'Opciones de ' + product.name"><ion-icon name="ellipsis-horizontal" slot="icon-only" /></ion-button></div>
+              <div class="product-title"><h2>{{ product.name }}</h2><strong>{{ money(product.price) }}</strong></div><p>{{ product.description }}</p>
+            </div>
+            <ion-button expand="block" (click)="add(product)" [attr.data-testid]="'add-' + product.id"><ion-icon name="add-outline" slot="start" />Agregar al carrito</ion-button>
+            <div class="image-hint"><span>Pellizca la imagen para ampliarla.</span>@if ((zoomPercent()[product.id] || 100) > 100) { <button (click)="zoom.reset()" class="reset-image" [attr.aria-label]="'Restablecer imagen de ' + product.name">Restablecer</button> }</div>
+          </ion-card-content>
+        </ion-card>
+      }
+    </ion-list>
+    <p class="catalog-note">Mantén presionado un producto para ver sus opciones.</p>
+    <div class="cart-strip"><div><strong>{{ order.count() }} {{ order.count() === 1 ? 'producto' : 'productos' }}</strong><span> en tu carrito</span></div><ion-button routerLink="/carrito" fill="clear" data-testid="view-cart">Ver carrito<ion-icon name="arrow-forward-outline" slot="end" /></ion-button></div>
+  </main>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end"><ion-fab-button routerLink="/carrito" aria-label="Ver mi carrito" data-testid="cart-fab"><ion-icon name="bag-handle-outline" />@if (order.count()) { <span class="fab-count">{{ order.count() }}</span> }</ion-fab-button></ion-fab>
+</ion-content>

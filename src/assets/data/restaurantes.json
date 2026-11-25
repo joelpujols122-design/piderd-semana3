@@ -1,0 +1,5 @@
+[
+  {"id":"r1","name":"La Cocina Criolla","description":"Comida de casa, con todo el sabor de aquí.","tag":"Criolla","time":"25–35 min","image":"assets/images/pollo-real.jpg"},
+  {"id":"r2","name":"Sabor del Patio","description":"Un encuentro con nuestros sabores favoritos.","tag":"Casera","time":"20–30 min","image":"assets/images/patio-real.jpg"},
+  {"id":"r3","name":"El Fogón RD","description":"Platos preparados al momento y mucho sazón.","tag":"Dominicana","time":"30–40 min","image":"assets/images/fogon-real.jpg"}
+]
