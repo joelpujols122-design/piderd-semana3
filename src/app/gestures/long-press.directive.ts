@@ -12,6 +12,7 @@ export class LongPressDirective implements AfterViewInit, OnDestroy {
   private origin?: { clientX: number; clientY: number };
   private active = false;
   private canceled = true;
+  private longPressTriggered = false;
 
   ngAfterViewInit(): void {
     this.gesture = this.controller.create({
@@ -24,7 +25,10 @@ export class LongPressDirective implements AfterViewInit, OnDestroy {
         if (!this.active || this.canceled) return;
         this.timer = setTimeout(() => {
           this.timer = undefined;
-          if (this.active && !this.canceled) this.longPressed.emit();
+          if (this.active && !this.canceled) {
+            this.longPressTriggered = true;
+            this.longPressed.emit();
+          }
         }, 650);
       },
       onMove: event => { if (movedOutsidePress(event.deltaX, event.deltaY)) this.abort(); },
@@ -49,8 +53,16 @@ export class LongPressDirective implements AfterViewInit, OnDestroy {
     this.checkMovement(event.touches[0]);
   }
   @HostListener('pointerup') @HostListener('pointercancel')
-  @HostListener('touchend') @HostListener('touchcancel')
+  @HostListener('touchcancel')
   @HostListener('window:blur') onContactEnd(): void { this.finish(); }
+  @HostListener('touchend', ['$event']) onTouchEnd(event: TouchEvent): void {
+    // Evita que al soltar el dedo se toque una opción o el fondo del menú recién abierto.
+    if (this.longPressTriggered && event.cancelable) {
+      event.preventDefault();
+    }
+    this.longPressTriggered = false;
+    this.finish();
+  }
   @HostListener('document:visibilitychange') onVisibilityChange(): void { if (document.hidden) this.finish(); }
   @HostListener('contextmenu', ['$event']) onContextMenu(event: Event): void { event.preventDefault(); }
   private startContact(point: { clientX: number; clientY: number }): void {
@@ -58,6 +70,7 @@ export class LongPressDirective implements AfterViewInit, OnDestroy {
     if (this.active) return;
     this.clearTimer();
     this.origin = { clientX: point.clientX, clientY: point.clientY };
+    this.longPressTriggered = false;
     this.active = true;
     this.canceled = false;
   }

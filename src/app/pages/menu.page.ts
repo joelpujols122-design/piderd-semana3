@@ -50,26 +50,29 @@ export class MenuPage {
       return;
     }
     this.sheetOpen = true;
-    const sheet = await this.sheets.create({
-      header: product.name,
-      subHeader: money(product.price),
-      buttons: [
-        {
-          text: 'Agregar al carrito',
-          icon: 'bag-handle-outline',
-          handler: () => { void this.add(product); },
-        },
-        {
-          text: 'Ver descripción',
-          icon: 'restaurant-outline',
-          handler: () => { void this.describe(product); },
-        },
-        { text: 'Cancelar', role: 'cancel', icon: 'close-outline' },
-      ],
-    });
-    await sheet.present();
-    await sheet.onDidDismiss();
-    this.sheetOpen = false;
+    try {
+      const sheet = await this.sheets.create({
+        header: product.name,
+        subHeader: money(product.price),
+        buttons: [
+          {
+            text: 'Agregar al carrito',
+            icon: 'bag-handle-outline',
+            handler: () => { void this.add(product); },
+          },
+          {
+            text: 'Ver descripción',
+            icon: 'restaurant-outline',
+            handler: () => { void this.describe(product); },
+          },
+          { text: 'Cancelar', role: 'cancel', icon: 'close-outline' },
+        ],
+      });
+      await sheet.present();
+      await sheet.onDidDismiss();
+    } finally {
+      this.sheetOpen = false;
+    }
   }
   private async describe(product: Product): Promise<void> {
     const alert = await this.alerts.create({

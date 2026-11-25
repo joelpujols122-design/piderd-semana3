@@ -36,7 +36,7 @@ npm run android:open
 
 Seleccionar un teléfono o emulador en Android Studio y ejecutar **Run**. Ahí se comprueba el funcionamiento de los gestos táctiles.
 
-La versión Android actual es 1.0.1. Las capturas y el video de demostración académica se entregan por separado.
+La versión Android actual es 1.0.2. Las capturas y el video de demostración académica se entregan por separado.
 
 ## Gestos
 
@@ -44,6 +44,7 @@ La versión Android actual es 1.0.1. Las capturas y el video de demostración ac
 - Restaurantes: tirar de la lista hacia abajo vuelve a cargar el catálogo guardado en la app.
 - Menú: separar dos dedos sobre la foto la amplía, hasta tres veces su tamaño. Restablecer devuelve la imagen al tamaño inicial.
 - Menú: mantener pulsado el nombre o la descripción de un plato durante 650 ms abre sus opciones. Si se mueve el dedo más de 10 px, se cancela la pulsación. El botón de tres puntos abre las mismas opciones.
+- Las opciones permanecen abiertas al levantar el dedo. Para cerrarlas se elige una acción o se toca Cancelar.
 
 ## Fotografías e ícono
 
